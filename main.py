@@ -5,21 +5,24 @@ from src.modelling import get_models_results, define_models, define_params_space
 from sklearn.model_selection import train_test_split
 
 
-def main(extract_new_features: True) -> None:
+def main(extract_new_features=False) -> None:
     """
     Main function to:
     - Load data
     - Perform EDA
     - Preprocessing
     - Modelling
-    :param extract_new_features: Whether to extract new features or not
-    :return:
+    :param extract_new_features: Whether to extract new features or not. Default to False
+    :return: None, variable importance
     """
     df = load_data('dataset.csv')
     df = convert_column_names(df)
 
+    if extract_new_features:
+        df = extract_features(df, 'both')
+
     # EDA
-    summary_stats = eda.data_summary(df)
+    eda.data_summary(df)
     eda.plot_pairs(df, diagonal_plot_distribution='kde')
     eda.examine_missing_values(df)
     eda.plot_missing_values_percentages(df)
@@ -28,9 +31,6 @@ def main(extract_new_features: True) -> None:
     eda.investigate_duplicates(df)
 
     # Processing
-    if extract_new_features:
-        df = extract_features(df, 'both')
-    print(df)
     X, y = feature_target_split(df, 'strength')
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, train_size=0.8, random_state=123)
     X_train, X_test = impute_na_and_rescale(training_features=X_train, test_features=X_test)
@@ -42,11 +42,11 @@ def main(extract_new_features: True) -> None:
     best_performing_model = min(results, key=results.get)
     rmse_best_model = results.get(best_performing_model)[0]
     best_model = results.get(best_performing_model)[1]
-    print('baseline', results.get('linear_regression'), 'best_model', best_performing_model, 'rmse', rmse_best_model)
+    print('baseline', results.get('linear_regression')[0], 'best_model', best_performing_model, 'rmse', rmse_best_model)
 
     # Show feature importance
-    get_feature_importance(best_performing_model, best_model)
+    get_feature_importance(X.columns, best_performing_model, best_model)
 
 
 if __name__ == "__main__":
-    main()
+    main(False)

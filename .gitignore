@@ -162,3 +162,4 @@ cython_debug/
 *.npy
 *.csv
 *.idea/
+*.untitled_project/

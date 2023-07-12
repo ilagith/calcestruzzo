@@ -49,23 +49,25 @@ def convert_column_names(data: pd.DataFrame) -> pd.DataFrame:
 def extract_features(data: pd.DataFrame, features_type: str) -> pd.DataFrame:
     """
     Add extracted features to original dataframe. Here, the user can decide to add
-    domain features found on research papers ('water_cement_ratio', 'fly_ash_specific_gravity'),
+    domain features found on research papers ('total_vol_aggregation', 'coarse_aggr_age'),
     or features derived from the data itself () or both.
     :param data: Original DataFrame
     :param features_type: Type of features we would like to extract ['domain', 'derived', 'both']
     :return data: Original dataframe + 'domain' or 'derived' or 'both' features
     """
     types_of_features = {
-        'domain': ['water_cement_ratio', 'fly_ash_specific_gravity'],
-        'derived': ['coarse_aggr_age', 'fine_aggr_age'],
-        'both': ['water_cement_ratio', 'fly_ash_specific_gravity', 'coarse_aggr_age', 'fine_aggr_age']
+        'domain': ['total_vol_aggregation', 'total_vol_aggregation'],
+        'derived': ['total_vol_aggregation', 'total_components'],
+        'both': ['total_vol_aggregation', 'total_vol_aggregation', 'total_components']
     }
 
     formulas = {
-        'water_cement_ratio': data['water_component'] / data['cement_component'],
-        'fly_ash_specific_gravity': data['fly_ash_component'] / data['water_component'],
-        'coarse_aggr_age': data['coarse_aggregate_component'] / data['age_in_days'],
-        'fine_aggr_age': data['fine_aggregate_component'] / data['age_in_days']
+        'total_vol_aggregation': data['coarse_aggregate_component'] + data['fine_aggregate_component'],
+        'water_cement_furnace_ash_ratio': data['water_component'] / (
+                data['cement_component'] + data['blast_furnace_slag'] + data['fly_ash_component']),
+        'total_components': data['cement_component'] + data['blast_furnace_slag'] + data['fly_ash_component'] +
+                            data['water_component'] + data['superplasticizer_component'] +
+                            data['coarse_aggregate_component'] + data['fine_aggregate_component']
     }
 
     features_to_add = types_of_features.get(features_type)

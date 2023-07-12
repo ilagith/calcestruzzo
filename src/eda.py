@@ -5,14 +5,13 @@ import pandas as pd
 import seaborn as sns
 
 
-def data_summary(data: pd.DataFrame) -> pd.DataFrame:
+def data_summary(data: pd.DataFrame) -> None:
     """
     Explore general statistics per each variable in DataFrame.
     :param data: DataFrame to gets statistics for
-    :return summary_statistics: Summary statistics per each column in data
+    :return None, print summary_statistics per each column in data
     """
-    summary_statistics = data.describe()
-    return summary_statistics
+    print(data.describe())
 
 
 def plot_pairs(data: pd.DataFrame, diagonal_plot_distribution: str) -> None:
@@ -107,6 +106,3 @@ def check_correlations(data: pd.DataFrame) -> None:
     below_diagonal = np.triu(np.ones_like(data.corr(), dtype=bool))
     sns.heatmap(data.corr(), annot=True, linewidth=.50, cmap=sns.color_palette("viridis"), mask=below_diagonal)
     plt.show()
-
-
-

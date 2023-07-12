@@ -33,8 +33,7 @@ def get_models_results(models: dict, param_grids: dict, x_train: np.ndarray,
 
     for model_name, model in models.items():
         params_space = param_grids.get(model_name)
-        print(model_name)
-        print(results)
+
         # models to tune
         if params_space:
             fitted_model, tuning_params = random_search_cv(x_train, y_train, model, params_space)
@@ -46,7 +45,7 @@ def get_models_results(models: dict, param_grids: dict, x_train: np.ndarray,
             y_pred = get_predictions(fitted_model, x_test)
 
         rmse = compute_error(y_test, y_pred, squared=False)
-        results[model_name] = rmse
+        results[model_name] = [rmse, fitted_model]
 
     return results
 
@@ -59,9 +58,9 @@ def define_models() -> dict:
     """
     models = {
         'linear_regression': LinearRegression(),
-        'random_forest': RandomForestRegressor(),
-        'gbm': GradientBoostingRegressor(),
-        'xgboost': XGBRegressor(),
+        # 'random_forest': RandomForestRegressor(n_jobs=-1),
+        # 'gbm': GradientBoostingRegressor(),
+        # 'xgboost': XGBRegressor(),
         'lightgbm': LGBMRegressor()
     }
 
@@ -98,7 +97,6 @@ def define_params_space() -> dict:
             'n_estimators': list(range(5, 160, 3)),
             'reg_lambda': list(np.arange(1, 3, 0.25)),
         }
-
     }
 
     return models_params_space
@@ -134,7 +132,7 @@ def random_search_cv(x_train: np.ndarray, y_train: np.ndarray, model: Any, param
     rs = RandomizedSearchCV(
         estimator=model,
         param_distributions=parameters_grid,
-        cv=10,
+        cv=5,
         scoring='neg_mean_squared_error',
         n_iter=50,
         random_state=123
@@ -159,26 +157,20 @@ def get_predictions(fitted_model: Any, x_test: np.ndarray) -> np.ndarray:
     return predictions
 
 
-def get_feature_importance(model_name: str, fitted_model) -> None:
+def get_feature_importance(input_features: list, model_name: str, fitted_model) -> None:
     """
     Feature importance retrieved depending on the best performing model.
     Plotted on a barchart
+    :param input_features: List of column names
     :param model_name: String of model name
     :param fitted_model: Fitted model
-    :return:
+    :return: None, plot of feature importance
     """
     if model_name == 'linear_regression':
-        variable_importances = fitted_model.coef
-        variable_names = "In coefficients"
-    elif model_name in ['random_forest', 'xgboost', 'gbm']:
+        variable_importances = fitted_model.coef_
+    else:
         variable_importances = fitted_model.feature_importances_
-        variable_names = fitted_model.feature_names
-    else:
-        variable_importances = fitted_model.feature_importance()
-        variable_names = fitted_model.feature_name()
 
-    if model_name != 'linear_regression':
-        plt.barh(variable_names, variable_importances)
-        plt.show()
-    else:
-        print(variable_importances)
+    plt.figure(figsize=(20, 10))
+    plt.barh(input_features, variable_importances)
+    plt.show()
