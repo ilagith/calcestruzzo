@@ -58,9 +58,9 @@ def define_models() -> dict:
     """
     models = {
         'linear_regression': LinearRegression(),
-        # 'random_forest': RandomForestRegressor(n_jobs=-1),
-        # 'gbm': GradientBoostingRegressor(),
-        # 'xgboost': XGBRegressor(),
+        'random_forest': RandomForestRegressor(n_jobs=-1),
+        'gbm': GradientBoostingRegressor(),
+        'xgboost': XGBRegressor(),
         'lightgbm': LGBMRegressor()
     }
 
