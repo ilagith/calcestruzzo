@@ -11,12 +11,12 @@ tramite il miglior modello in termini di rmse selezionato sul test set.
 `requirements.txt` incorpora tutti i requisiti per installare il progetto su altra macchina.
 `.gitignore` ignora file locali.
 `README.md` illustra scopo e struttura della repository.
+
 .
-├── src
-│   ├── data_processing.py
-│   ├── eda.py
-│   └── modelling.py
-├── main.py
-├── .gitignore
-├── requirements.txt
-└── README.md
+ * [src](./src)
+   * [eda.py](./src/eda.py)
+   * [modelling.py](./src/modelling.py)
+   * [data_processing.py](./src/data_processing.py)
+ * [requirements.txt](./requirements.txt) 
+ * [.gitignore](./src/modelling.py)
+ * [README.md](./README.md)
