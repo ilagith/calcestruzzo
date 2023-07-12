@@ -3,7 +3,7 @@
 Lo scopo del progetto è di prevedere la forza del composto (strength) sulla base delle variabili fornite dal cliente e
 di analizzarne la loro importanza.
 
-# Struttura della repository
+## Struttura della repository
 
 - `main.py` contiene tutti gli steps necessari per predire la forza del composto ed analizzarne le variabili significative
 tramite il miglior modello in termini di rmse selezionato sul test set. 
@@ -18,5 +18,5 @@ tramite il miglior modello in termini di rmse selezionato sul test set.
    * [modelling.py](./src/modelling.py)
    * [data_processing.py](./src/data_processing.py)
  * [requirements.txt](./requirements.txt) 
- * [.gitignore](./src/modelling.py)
+ * [.gitignore](./.gitignore)
  * [README.md](./README.md)
