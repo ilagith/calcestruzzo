@@ -2,7 +2,7 @@ from lightgbm import LGBMRegressor
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from typing import Any, Tuple
@@ -37,15 +37,15 @@ def get_models_results(models: dict, param_grids: dict, x_train: np.ndarray,
         # models to tune
         if params_space:
             fitted_model, tuning_params = random_search_cv(x_train, y_train, model, params_space)
-            y_pred = get_predictions(fitted_model, x_test)
 
         # baseline
         else:
             fitted_model = model.fit(x_train, y_train)
-            y_pred = get_predictions(fitted_model, x_test)
 
+        y_pred = get_predictions(fitted_model, x_test)
         rmse = compute_error(y_test, y_pred, squared=False)
-        results[model_name] = [rmse, fitted_model]
+        r_2 = r2_score(y_test, y_pred)
+        results[model_name] = [rmse, fitted_model, r_2]
 
     return results
 

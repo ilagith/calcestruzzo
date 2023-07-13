@@ -32,13 +32,14 @@ def main(extract_new_features=False) -> None:
 
     # Processing
     X, y = feature_target_split(df, 'strength')
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, train_size=0.8, random_state=123)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, train_size=0.80, random_state=123)
     X_train, X_test = impute_na_and_rescale(training_features=X_train, test_features=X_test)
 
     # Modelling
     models = define_models()
     params_space = define_params_space()
     results = get_models_results(models, params_space, X_train, X_test, y_train, y_test)
+    print(results)
     best_performing_model = min(results, key=results.get)
     rmse_best_model = results.get(best_performing_model)[0]
     best_model = results.get(best_performing_model)[1]
